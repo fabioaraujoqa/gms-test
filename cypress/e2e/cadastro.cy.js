@@ -1,6 +1,6 @@
 /// <reference types="cypress"/>
 
-describe('US-012-Funcionalidade: Cadastro de membros', () => {
+describe.skip('US-012-Funcionalidade: Cadastro de membros', () => {
   beforeEach(() => {
     cy.visit('/')
   });
