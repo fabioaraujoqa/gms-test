@@ -13,26 +13,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout Cypress repository
       uses: actions/checkout@v2
-      with:
-        repository: 'EBAC-QE/golden-movie-studio'
+
+    - name: Checkout Golden Movie Studio repository
+      run: git clone https://github.com/EBAC-QE/golden-movie-studio.git golden-movie-studio
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'
 
-    - name: Install dependencies
-      run: npm install
+    - name: Install dependencies for Golden Movie Studio
+      run: |
+        cd golden-movie-studio
+        npm install
 
-    - name: Start the server
-      run: npm start &
+    - name: Start the Golden Movie Studio server
+      run: |
+        cd golden-movie-studio
+        npm start &
       env:
         NODE_ENV: test
 
     - name: Wait for server to be ready
       run: sleep 15
+
+    - name: Install Cypress dependencies
+      run: npm install
 
     - name: Run Cypress tests
       run: npx cypress run
