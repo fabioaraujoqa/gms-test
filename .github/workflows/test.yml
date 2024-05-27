@@ -1,24 +1,38 @@
-name: teste cypress
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install -f
-    - run: npm test
+        repository: 'EBAC-QE/golden-movie-studio'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start the server
+      run: npm start &
+      env:
+        NODE_ENV: test
+
+    - name: Wait for server to be ready
+      run: sleep 15
+
+    - name: Run Cypress tests
+      run: npx cypress run
