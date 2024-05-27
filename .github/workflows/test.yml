@@ -37,10 +37,23 @@ jobs:
         NODE_ENV: test
 
     - name: Wait for server to be ready
-      run: sleep 15
+      run: |
+        echo "Waiting for the server to be ready..."
+        sleep 60
+        echo "Continuing after waiting for 60 seconds."
+
+    - name: Check server health
+      run: |
+        until curl -sSf http://127.0.0.1:8080 > /dev/null; do
+          echo "Waiting for the server to be up..."
+          sleep 5
+        done
+        echo "Server is up and running."
 
     - name: Install Cypress dependencies
       run: npm install
 
     - name: Run Cypress tests
-      run: npx cypress run
+      run: |
+        echo "Running Cypress tests..."
+        npx cypress run
